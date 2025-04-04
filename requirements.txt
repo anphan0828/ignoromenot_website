@@ -2,4 +2,4 @@ pickleshare==0.7.5
 streamlit-aggrid==1.0.5 
 altair==4.2.2
 pandas==1.5.1
-numpy==1.23.4
+numpy==1.26.4
