@@ -5,9 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 import pickle as cp
 import base64
 
-from paths_config import (
-    PUBTATOR_PICKLE
-)
+PUBTATOR_PICKLE = "output/pubtator_pubs.pkl"
 
 
 def display_nd_data(nd_df):
