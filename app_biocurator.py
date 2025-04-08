@@ -979,7 +979,29 @@ def main():
         #         file_name="nd_proteins.csv",
         #         mime="text/csv"
         #     )
-    
+        st.text("Column descriptions:")
+        # Display column description table from markdown format
+        st.markdown("""
+| Column Name | Description |
+|-------------|-------------|
+| `uniprot_id` | UniProt accession number for the protein |
+| `gene_name` | Official gene symbol, sometimes with evidence codes |
+| `ncbi_gene` | NCBI Gene ID for the protein (from SwissProt dat file)|
+| `last_reviewed_pubyear` | Year of the last reviewed publication (by UniProt) for the protein |
+| `ambiguous_mapping` | Checkbox indicating if the protein has ambiguous mapping to a gene (if a gene has    more than 1000 associated PubTator publications) |
+| `gene_description` | Functional description of the gene/protein (from NCBI Gene Summary)|
+| `Unreviewed Publications` | Number of unreviewed publications for the protein (from PubTator) |
+| | The following columns can be viewed by clicking on the "View" button in each Unreviewed Publications cell |
+| `gene_aliases` | Alternative names/symbols for the gene, comma-separated (from NCBI Gene Summary). These aliases are used in PubTator, so false positives might stem from gene aliases|
+| `pmid` | PubMed ID of the publication |
+| `year` | Publication year |
+| `in_title` | Boolean (True/False) indicating if gene/protein is mentioned in the title |
+| `fraction_mentions` | Fraction of gene mentions in the paper that refer to this gene (0-1), calculated as the number of times mentioning the query gene/protein divided by the number of times mentioning any gene/protein as recognized by PubTator |
+| `total_genes` | Total number of genes mentioned in the publication |
+| `journal` | Name of the journal |
+| `full_text` | Boolean (True/False) indicating if the full text was analyzed by PubTator (vs. just abstract) |
+| `title` | Title of the publication |""")
+        
     except Exception as e:
         st.error(f"Error loading data: {str(e)}")
         st.stop()
