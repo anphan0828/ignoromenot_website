@@ -158,7 +158,7 @@ def create_aggrid_hover_table(df, unreviewed_dict):
                 value=max_fraction,
                 step=0.01
             )
-        
+        st.write("Suggested minimum fraction of gene mentions: 0.3")
     # Add year filter input boxes
     with col2:
         st.write("Filter publications by publication year range")
@@ -589,14 +589,12 @@ def create_aggrid_hover_table(df, unreviewed_dict):
                                 <tr style="background-color: #f0f0f0;">
                                     <th style="padding: 4px; border: 1px solid #ddd;">PMID</th>
                                     <th style="padding: 4px; border: 1px solid #ddd;">Year</th>
-                                    <th style="padding: 4px; border: 1px solid #ddd;">Score</th>
                                     <th style="padding: 4px; border: 1px solid #ddd;">Fraction</th>
                                 </tr>
                                 ${previewData.map(pub => `
                                     <tr>
                                         <td style="padding: 4px; border: 1px solid #ddd;">${pub.pmid || ''}</td>
                                         <td style="padding: 4px; border: 1px solid #ddd;">${pub.year || ''}</td>
-                                        <td style="padding: 4px; border: 1px solid #ddd;">${pub.score ? Number(pub.score).toFixed(2) : ''}</td>
                                         <td style="padding: 4px; border: 1px solid #ddd;">${pub.fraction_mentions ? Number(pub.fraction_mentions).toFixed(2) : ''}</td>
                                     </tr>
                                 `).join('')}
@@ -910,14 +908,14 @@ lambda x: (int(x)) if not pd.isnull(x) else x
     evidence_dist = non_nd_df['protein_existence'].value_counts()
     evidence_chart = alt.Chart(
         evidence_dist.reset_index().rename(
-            columns={'index': 'Protein Existence', 'protein_existence': 'Count'}
+            columns={'index': 'Protein Existence Level (PE)', 'protein_existence': 'Count'}
         )
     ).mark_bar().encode(
-        x=alt.X('Protein Existence:N', sort='x'),
+        x=alt.X('Protein Existence Level (PE):N', sort='x'),
         y='Count:Q',
-        color=alt.Color('Protein Existence:N', legend=None)
+        color=alt.Color('Protein Existence Level (PE):N', legend=None)
     ).properties(
-        title='Barplot of Protein Existence',
+        title='Barplot of Protein Existence Level (PE)',
         height=500
     )
     st.altair_chart(evidence_chart, use_container_width=True)
@@ -931,7 +929,7 @@ lambda x: (int(x)) if not pd.isnull(x) else x
     )
     
     filtered_df = non_nd_df[non_nd_df['protein_existence'].isin(selected_levels)]
-    st.metric("Proteins with Selected Existence", len(filtered_df)) 
+    st.metric("Proteins with Selected PE Level", len(filtered_df)) 
     
     # Display protein information with interactive grid
     create_aggrid_hover_table(filtered_df, unreviewed_dict)
