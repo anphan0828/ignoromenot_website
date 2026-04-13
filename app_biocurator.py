@@ -4,6 +4,16 @@ import altair as alt
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 import pickle as cp
 import base64
+import sys
+
+# Pandas 2.0+ compatibility shim for unpickling data from older pandas versions
+if pd.__version__.split('.')[0] in ['2', '3']:
+    import pandas.core.indexes.base
+    sys.modules['pandas.core.indexes.numeric'] = pandas.core.indexes.base
+    # Map classes that were removed in pandas 2.0
+    pandas.core.indexes.base.Int64Index = pd.Index
+    pandas.core.indexes.base.UInt64Index = pd.Index
+    pandas.core.indexes.base.Float64Index = pd.Index
 
 PUBTATOR_PICKLE = "output/pubtator_pubs.pkl"
 
@@ -906,10 +916,9 @@ lambda x: (int(x)) if not pd.isnull(x) else x
     
     # Display protein evidence level distribution
     evidence_dist = non_nd_df['protein_existence'].value_counts()
+    evidence_dist = evidence_dist.reset_index().rename(columns={'count': 'Count', 'protein_existence': 'Protein Existence Level (PE)'})
     evidence_chart = alt.Chart(
-        evidence_dist.reset_index().rename(
-            columns={'index': 'Protein Existence Level (PE)', 'protein_existence': 'Count'}
-        )
+        evidence_dist
     ).mark_bar().encode(
         x=alt.X('Protein Existence Level (PE):N', sort='x'),
         y='Count:Q',
